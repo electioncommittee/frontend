@@ -11,7 +11,7 @@
       >
         <option value="2012">2012</option>
         <option value="2016">2016</option>
-        <option selected value="2020">2020</option>
+        <option value="2020">2020</option>
       </select>
     </div>
     <div class="row">
@@ -23,7 +23,7 @@
           v-model="form.area.county"
           @change="onCountyChanged"
         >
-          <option selected value="0">全國</option>
+          <option value="0">全國</option>
           <!-- Inject County List -->
           <option v-for="c in select.counties" :key="c.id" :value="c.id">
             {{ c.name }}
@@ -38,7 +38,7 @@
           v-model="form.area.district"
           @change="onDistrictChanged"
         >
-          <option selected value="0">-</option>
+          <option value="0">-</option>
           <!-- Inject County List -->
           <option v-for="c in select.districts" :key="c.id" :value="c.id">
             {{ c.name }}
@@ -48,7 +48,7 @@
       <div class="col-sm-4 form-group">
         <label>村里</label>
         <select class="form-control" required v-model="form.area.village">
-          <option selected value="0">-</option>
+          <option value="0">-</option>
           <!-- Inject County List -->
           <option v-for="c in select.villages" :key="c.id" :value="c.id">
             {{ c.name }}
@@ -64,7 +64,7 @@
         name="granules"
         v-model="form.granule"
       >
-        <option value="country" selected>全國</option>
+        <option value="country">全國</option>
         <option value="county">縣市</option>
         <option value="district">鄉鎮市區</option>
         <option value="village">村里</option>
@@ -73,7 +73,7 @@
     <div class="form-group">
       <label>對象</label>
       <select class="form-control" required v-model="form.target">
-        <option selected value="elect">當選者</option>
+        <option value="elect">當選者</option>
         <option value="winner">領先者</option>
         <!-- Inject County List -->
         <option v-for="t in select.candidates" :key="t.no" :value="t.no">
