@@ -29,6 +29,11 @@ const routes: Array<RouteConfig> = [
     path: "/local",
     name: "local",
     component: () => import("./views/Local.vue")
+  },
+  {
+    path: "/referendum",
+    name: "referendum",
+    component: () => import("./views/Referendum.vue")
   }
 ];
 
