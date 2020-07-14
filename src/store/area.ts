@@ -3,3 +3,9 @@ export default class Area {
   district = 0;
   village = 0;
 }
+
+export class ConstituencyArea {
+  county = 0;
+  constituency = 0;
+  village = 0;
+}

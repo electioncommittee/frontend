@@ -65,7 +65,6 @@
         name="granules"
         v-model="form.granule"
       >
-        <option value="country">全國</option>
         <option value="county">縣市</option>
         <option value="district">鄉鎮市區</option>
         <option value="village">村里</option>
@@ -97,7 +96,7 @@ import Area from "@/store/area.ts";
 class Form {
   year = 2018;
   area = new Area();
-  granule: Granule = "country";
+  granule: Granule = "county";
   target: AnalTarget = "elect";
 }
 
@@ -172,8 +171,6 @@ export default class extends Vue {
       this.form.granule != "village" &&
       this.form.granule != "district"
     )
-      return false;
-    if (this.form.area.county != 0 && this.form.granule == "country")
       return false;
     return true;
   }
