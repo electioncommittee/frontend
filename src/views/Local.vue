@@ -116,7 +116,6 @@ export default class extends Vue {
 
   private onYearChanged() {
     this.updateCounties();
-    this.updateCandidates();
   }
 
   private async updateCounties() {
@@ -125,22 +124,31 @@ export default class extends Vue {
     this.form.area.county = 0;
   }
 
-  private async onCountyChanged() {
+  private onCountyChanged() {
+    this.updateDistricts();
+    this.updateCandidates();
+  }
+
+  private async updateDistricts() {
     const countyId = this.form.area.county;
     this.form.area.district = 0;
     this.form.area.village = 0;
     if (countyId == 0) {
       this.select.districts = [];
       this.select.villages = [];
-      return;
+    } else {
+      this.select.districts = await AreaApi.districts({
+        year: this.form.year,
+        countyId: countyId
+      });
     }
-    this.select.districts = await AreaApi.districts({
-      year: this.form.year,
-      countyId: countyId
-    });
   }
 
   private async onDistrictChanged() {
+    this.updateVillages();
+  }
+
+  private async updateVillages() {
     const distId = this.form.area.district;
     this.form.area.village = 0;
     if (distId == 0) {
@@ -155,10 +163,14 @@ export default class extends Vue {
   }
 
   private async updateCandidates() {
+    if (this.form.area.county == 0) {
+      this.select.candidates = [];
+      return;
+    }
     const candidates = await CandidateApi.getPresidentCandidate({
       year: this.form.year,
-      area: 0,
-      type: "president"
+      area: this.form.area.county,
+      type: "local"
     });
     this.select.candidates = candidates;
   }

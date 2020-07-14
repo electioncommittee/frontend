@@ -63,7 +63,7 @@
         name="granules"
         v-model="form.granule"
       >
-        <option value="constituency">選區</option>
+        <option value="constituency" selected>選區</option>
         <option value="village">村里</option>
       </select>
     </div>
@@ -114,7 +114,6 @@ export default class extends Vue {
 
   private onYearChanged() {
     this.updateCounties();
-    this.updateCandidates();
   }
 
   private async updateCounties() {
@@ -124,6 +123,10 @@ export default class extends Vue {
   }
 
   private async onCountyChanged() {
+    this.updateConstituencies();
+  }
+
+  private async updateConstituencies() {
     const countyId = this.form.area.county;
     this.form.area.constituency = 0;
     this.form.area.village = 0;
@@ -157,6 +160,11 @@ export default class extends Vue {
   }
 
   private async onConstituencyChanged() {
+    this.updateVillages();
+    this.updateCandidates();
+  }
+
+  private async updateVillages() {
     const distId = this.form.area.constituency;
     this.form.area.village = 0;
     if (distId == 0) {
@@ -174,11 +182,18 @@ export default class extends Vue {
   }
 
   private async updateCandidates() {
+    if (this.form.area.constituency == 0) {
+      this.select.candidates = [];
+      return;
+    }
     const candidates = await CandidateApi.getPresidentCandidate({
       year: this.form.year,
-      area: 0,
-      type: "president"
+      area: this.form.area.constituency,
+      type: "legislator"
     });
+    // Remove indicator when duplicated name appears
+    // e.g. 許淑華(國) -> 許淑華
+    candidates.forEach(c => (c.name = c.name.replace(/\(.*\)$/, "")));
     this.select.candidates = candidates;
   }
 

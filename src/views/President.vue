@@ -64,7 +64,7 @@
         name="granules"
         v-model="form.granule"
       >
-        <option value="country">全國</option>
+        <option value="country" selected>全國</option>
         <option value="county">縣市</option>
         <option value="district">鄉鎮市區</option>
         <option value="village">村里</option>
@@ -125,7 +125,11 @@ export default class extends Vue {
     this.form.area.county = 0;
   }
 
-  private async onCountyChanged() {
+  private onCountyChanged() {
+    this.updateDistrict();
+  }
+
+  private async updateDistrict() {
     const countyId = this.form.area.county;
     this.form.area.district = 0;
     this.form.area.village = 0;
@@ -141,6 +145,10 @@ export default class extends Vue {
   }
 
   private async onDistrictChanged() {
+    this.updateVillages();
+  }
+
+  private async updateVillages() {
     const distId = this.form.area.district;
     this.form.area.village = 0;
     if (distId == 0) {
