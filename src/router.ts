@@ -34,6 +34,11 @@ const routes: Array<RouteConfig> = [
     path: "/referendum",
     name: "referendum",
     component: () => import("./views/Referendum.vue")
+  },
+  {
+    path: "/recall",
+    name: "recall",
+    component: () => import("./views/Recall.vue")
   }
 ];
 
