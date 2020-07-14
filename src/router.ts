@@ -19,6 +19,11 @@ const routes: Array<RouteConfig> = [
     path: "/legislator",
     name: "legislator",
     component: () => import("./views/Legislator.vue")
+  },
+  {
+    path: "/local",
+    name: "local",
+    component: () => import("./views/Local.vue")
   }
 ];
 

@@ -2,13 +2,13 @@
   <div id="app">
     <div id="nav">
       <router-link :to="{ name: 'home' }">首頁</router-link> |
-      <router-link :to="{ name: 'president' }">總統暨副總統選舉</router-link> |
-      <router-link to="/about">區域立委選舉</router-link> |
-      <router-link to="/about">不分區立委選舉</router-link> |
-      <router-link to="/about">縣市長選舉</router-link> |
-      <router-link to="/about">韓國瑜罷免案</router-link> |
-      <router-link to="/about">交叉比對</router-link> |
-      <router-link to="/about">進階查詢</router-link> |
+      <router-link :to="{ name: 'president' }">總統副總統</router-link> |
+      <router-link :to="{ name: 'legislator' }">區域立委</router-link> |
+      <router-link :to="{ name: 'legislator-at-large' }">不分區</router-link> |
+      <router-link :to="{ name: 'local' }">縣市長</router-link> |
+      <router-link :to="{ name: 'referendum' }">2018年公投</router-link> |
+      <router-link :to="{ name: 'recall' }">韓國瑜罷免案</router-link> |
+      <router-link :to="{ name: 'advanced' }">進階查詢</router-link>
     </div>
     <div class="container">
       <router-view />
