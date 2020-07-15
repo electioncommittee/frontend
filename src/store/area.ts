@@ -14,4 +14,10 @@ export class ConstituencyArea {
   county = 0;
   constituency = 0;
   village = 0;
+  get id(): number {
+    if (this.village) return this.village;
+    if (this.constituency) return this.constituency;
+    if (this.county) return this.county;
+    return 0;
+  }
 }

@@ -1,101 +1,146 @@
 <template>
-  <form @submit.prevent="queryPoll">
-    <div class="form-group">
-      <label>年份</label>
-      <select
-        required
-        class="form-control"
-        name="year"
-        v-model="form.year"
-        @change="onYearChanged"
-      >
-        <option value="2012">2012</option>
-        <option value="2016">2016</option>
-        <option value="2020">2020</option>
-      </select>
-    </div>
-    <div class="row">
-      <div class="col-sm-4 form-group">
-        <label>縣市</label>
+  <div>
+    <form @submit.prevent="queryPoll">
+      <div class="form-group">
+        <label>年份</label>
+        <select
+          required
+          class="form-control"
+          name="year"
+          v-model="form.year"
+          @change="onYearChanged"
+        >
+          <option value="2012">2012</option>
+          <option value="2016">2016</option>
+          <option value="2020">2020</option>
+        </select>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 form-group">
+          <label>縣市</label>
+          <select
+            class="form-control"
+            required
+            v-model="form.area.county"
+            @change="onCountyChanged"
+          >
+            <option value="0">全國</option>
+            <!-- Inject County List -->
+            <option v-for="c in select.counties" :key="c.id" :value="c.id">
+              {{ c.name }}
+            </option>
+          </select>
+        </div>
+        <div class="col-sm-4 form-group">
+          <label>選區</label>
+          <select
+            class="form-control"
+            required
+            v-model="form.area.constituency"
+            @change="onConstituencyChanged"
+          >
+            <!-- Inject County List -->
+            <option
+              v-for="c in select.constituencies"
+              :key="c.id"
+              :value="c.id"
+            >
+              {{ c.name }}
+            </option>
+          </select>
+        </div>
+        <div class="col-sm-4 form-group">
+          <label>村里</label>
+          <select class="form-control" required v-model="form.area.village">
+            <option value="0">-</option>
+            <!-- Inject County List -->
+            <option v-for="c in select.villages" :key="c.id" :value="c.id">
+              {{ c.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>顆粒</label>
         <select
           class="form-control"
           required
-          v-model="form.area.county"
-          @change="onCountyChanged"
+          name="granules"
+          v-model="form.granule"
         >
-          <option value="0">全國</option>
+          <option value="constituency">選區</option>
+          <option value="village">村里</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>對象</label>
+        <select class="form-control" required v-model="form.target">
+          <option value="elect">當選者</option>
+          <option value="winner">領先者</option>
           <!-- Inject County List -->
-          <option v-for="c in select.counties" :key="c.id" :value="c.id">
-            {{ c.name }}
+          <option v-for="t in select.candidates" :key="t.no" :value="t.no">
+            ({{ t.no }}) {{ t.name }}
           </option>
         </select>
       </div>
-      <div class="col-sm-4 form-group">
-        <label>選區</label>
-        <select
-          class="form-control"
-          required
-          v-model="form.area.constituency"
-          @change="onConstituencyChanged"
-        >
-          <!-- Inject County List -->
-          <option v-for="c in select.constituencies" :key="c.id" :value="c.id">
-            {{ c.name }}
-          </option>
-        </select>
-      </div>
-      <div class="col-sm-4 form-group">
-        <label>村里</label>
-        <select class="form-control" required v-model="form.area.village">
-          <option value="0">-</option>
-          <!-- Inject County List -->
-          <option v-for="c in select.villages" :key="c.id" :value="c.id">
-            {{ c.name }}
-          </option>
-        </select>
-      </div>
-    </div>
-    <div class="form-group">
-      <label>顆粒</label>
-      <select
-        class="form-control"
-        required
-        name="granules"
-        v-model="form.granule"
-      >
-        <option value="constituency">選區</option>
-        <option value="village">村里</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>對象</label>
-      <select class="form-control" required v-model="form.target">
-        <option value="elect">當選者</option>
-        <option value="winner">領先者</option>
-        <!-- Inject County List -->
-        <option v-for="t in select.candidates" :key="t.no" :value="t.no">
-          ({{ t.no }}) {{ t.name }}
-        </option>
-      </select>
-    </div>
-    <input type="submit" class="btn btn-primary" />
-  </form>
+      <input type="submit" class="btn btn-primary" />
+    </form>
+    <table class="table table-hover mt-5">
+      <thead>
+        <tr>
+          <th>選區</th>
+          <th>地區</th>
+          <th>票數</th>
+          <th>得票者</th>
+          <th>政黨</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(row, i) in pollData" :key="i">
+          <td>{{ int2ch[(row.constituencyId % 100) - 1] }}</td>
+          <td>
+            {{
+              row.countyName +
+                (row.districtName || "") +
+                (row.villageName || "")
+            }}
+          </td>
+          <td>{{ row.vote }}</td>
+          <td>{{ row.candidateName.replace(/\(.*\)$/, "") }}</td>
+          <td>{{ row.partyName || "無黨籍" }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 import * as AreaApi from "@/store/api/area";
+import * as PollApi from "@/store/api/poll";
 import * as CandidateApi from "@/store/api/candidate";
 import { CandidateResponse } from "@/store/api/candidate";
-import { NameIdPair, Granule, AnalTarget } from "@/store/utils";
+import { NameIdPair } from "@/store/utils";
 import { ConstituencyArea as Area } from "@/store/area.ts";
 import { int2ch } from "@/store/utils";
 
+type Granule = "constituency" | "village";
+type AnalNo = "elect" | "winner" | number;
 class Form {
   year = 2020;
   area = new Area();
   granule: Granule = "constituency";
-  target: AnalTarget = "elect";
+  target: AnalNo = "elect";
+}
+
+interface Row {
+  vote: number;
+  villageName: string;
+  districtName?: string;
+  constituencyId: number;
+  countyName: string;
+  candidateName: string;
+  partyName: string;
 }
 
 @Component
@@ -107,6 +152,8 @@ export default class extends Vue {
     villages: Array<NameIdPair>(),
     candidates: Array<CandidateResponse>()
   };
+  private pollData = {};
+  private int2ch = int2ch;
 
   mounted() {
     this.onYearChanged();
@@ -209,6 +256,14 @@ export default class extends Vue {
       alert("查詢範圍與顆粒大小矛盾");
       return;
     }
+
+    this.pollData = await PollApi.queryLegislator({
+      type: "legislator",
+      year: this.form.year,
+      area: this.form.area.id,
+      granule: this.form.granule,
+      no: this.form.target
+    });
   }
 }
 </script>

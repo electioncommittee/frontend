@@ -103,7 +103,7 @@
             }}
           </td>
           <td>{{ row.vote }}</td>
-          <td>{{ row.candidateName }}</td>
+          <td>{{ row.candidateName.replace(/\(.*\)$/, "") }}</td>
           <td>{{ row.partyName || "無黨籍" }}</td>
         </tr>
       </tbody>
