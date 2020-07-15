@@ -2,14 +2,14 @@ import ajax from "axios";
 
 interface PresidentRequest {
   year: number;
-  no: number | "elect" | "winner";
+  no: number | "elect" | "winner" | "void" | "voter";
   area: number;
   granule: "country" | "county" | "district" | "village";
   type: "president";
 }
 
 interface PresidentResponse {
-  no: number;
+  no: number | "void" | "voter";
   countyId?: number;
   countyName?: string;
   districtId?: number;
@@ -30,14 +30,14 @@ export async function queryPresident(o: PresidentRequest) {
 
 interface LocalRequest {
   year: number;
-  no: number | "elect" | "winner";
+  no: number | "elect" | "winner" | "void" | "voter";
   area: number;
   granule: "county" | "district" | "village";
   type: "local";
 }
 
 interface LocalResponse {
-  no: number;
+  no: number | "void" | "voter";
   countyId: number;
   countyName: string;
   districtId?: number;
@@ -65,7 +65,7 @@ interface LegislatorRequest {
 }
 
 interface LegislatorResponse {
-  no: number;
+  no: number | "void" | "voter";
   countyId: number;
   countyName: string;
   constituencyId: number;
@@ -94,7 +94,7 @@ interface LegislatorAtLargeRequest {
 }
 
 interface LegislatorAtLargeResponse {
-  no: number;
+  no: number | "void" | "voter";
   countyId?: number;
   countyName?: string;
   districtId?: number;
@@ -109,4 +109,29 @@ interface LegislatorAtLargeResponse {
 export async function queryLegislatorAtLarge(o: LegislatorAtLargeRequest) {
   const ret = await ajax.get("/api/get-polls", { params: o });
   return ret.data as LegislatorAtLargeResponse[];
+}
+
+interface RecallRequest {
+  year: number;
+  case: number;
+  area: number;
+  granule: "county" | "country" | "district" | "village";
+  type: "recall";
+  no: "winner" | "consent" | "against" | "vote" | "void";
+}
+
+interface RecallResponse {
+  no: "consent" | "against" | "voter" | "void";
+  countyId?: number;
+  countyName?: string;
+  districtId?: number;
+  districtName?: string;
+  villageId?: number;
+  villageName?: string;
+  vote: number;
+}
+
+export async function queryRecall(o: RecallRequest) {
+  const ret = await ajax.get("/api/get-polls", { params: o });
+  return ret.data as RecallResponse[];
 }

@@ -1,7 +1,12 @@
 export default class Area {
-  county = 0;
-  district = 0;
-  village = 0;
+  county: number;
+  district: number;
+  village: number;
+  constructor(c = 0, d = 0, v = 0) {
+    this.county = c;
+    this.district = d;
+    this.village = v;
+  }
   get id(): number {
     if (this.village) return this.village;
     if (this.district) return this.district;
