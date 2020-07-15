@@ -1,82 +1,79 @@
 <template>
-  <form @submit.prevent="queryPoll">
-    <div class="form-group">
-      <label>案次</label>
-      <select
-        required
-        class="form-control"
-        v-model="form.case"
-        @change="onYearChanged"
-      >
-        <option v-for="n in 10" :key="n" :value="n + 6">{{ n + 6 }}</option>
-      </select>
-    </div>
-    <div class="row">
-      <div class="col-sm-4 form-group">
-        <label>縣市</label>
+  <div>
+    <form @submit.prevent="queryPoll">
+      <div class="form-group">
+        <label>案次</label>
+        <select required class="form-control" v-model="form.case">
+          <option v-for="n in 10" :key="n" :value="n + 6">{{ n + 6 }}</option>
+        </select>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 form-group">
+          <label>縣市</label>
+          <select
+            class="form-control"
+            required
+            v-model="form.area.county"
+            @change="onCountyChanged"
+          >
+            <option value="0">全國</option>
+            <!-- Inject County List -->
+            <option v-for="c in select.counties" :key="c.id" :value="c.id">
+              {{ c.name }}
+            </option>
+          </select>
+        </div>
+        <div class="col-sm-4 form-group">
+          <label>鄉鎮市區</label>
+          <select
+            class="form-control"
+            required
+            v-model="form.area.district"
+            @change="onDistrictChanged"
+          >
+            <option value="0">-</option>
+            <!-- Inject County List -->
+            <option v-for="c in select.districts" :key="c.id" :value="c.id">
+              {{ c.name }}
+            </option>
+          </select>
+        </div>
+        <div class="col-sm-4 form-group">
+          <label>村里</label>
+          <select class="form-control" required v-model="form.area.village">
+            <option value="0">-</option>
+            <!-- Inject County List -->
+            <option v-for="c in select.villages" :key="c.id" :value="c.id">
+              {{ c.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>顆粒</label>
         <select
           class="form-control"
           required
-          v-model="form.area.county"
-          @change="onCountyChanged"
+          name="granules"
+          v-model="form.granule"
         >
-          <option value="0">全國</option>
-          <!-- Inject County List -->
-          <option v-for="c in select.counties" :key="c.id" :value="c.id">
-            {{ c.name }}
-          </option>
+          <option value="country">全國</option>
+          <option value="county">縣市</option>
+          <option value="district">鄉鎮市區</option>
+          <option value="village">村里</option>
         </select>
       </div>
-      <div class="col-sm-4 form-group">
-        <label>鄉鎮市區</label>
-        <select
-          class="form-control"
-          required
-          v-model="form.area.district"
-          @change="onDistrictChanged"
-        >
-          <option value="0">-</option>
-          <!-- Inject County List -->
-          <option v-for="c in select.districts" :key="c.id" :value="c.id">
-            {{ c.name }}
-          </option>
+      <div class="form-group">
+        <label>對象</label>
+        <select class="form-control" required v-model="form.target">
+          <option value="winner">領先方</option>
+          <option value="consent">贊成方</option>
+          <option value="against">反對方</option>
         </select>
       </div>
-      <div class="col-sm-4 form-group">
-        <label>村里</label>
-        <select class="form-control" required v-model="form.area.village">
-          <option value="0">-</option>
-          <!-- Inject County List -->
-          <option v-for="c in select.villages" :key="c.id" :value="c.id">
-            {{ c.name }}
-          </option>
-        </select>
-      </div>
-    </div>
-    <div class="form-group">
-      <label>顆粒</label>
-      <select
-        class="form-control"
-        required
-        name="granules"
-        v-model="form.granule"
-      >
-        <option value="country">全國</option>
-        <option value="county">縣市</option>
-        <option value="district">鄉鎮市區</option>
-        <option value="village">村里</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>對象</label>
-      <select class="form-control" required v-model="form.target">
-        <option value="winner">領先方</option>
-        <option value="consent">贊成方</option>
-        <option value="against">反對方</option>
-      </select>
-    </div>
-    <input type="submit" class="btn btn-primary" />
-  </form>
+      <input type="submit" class="btn btn-primary" />
+    </form>
+  </div>
 </template>
 
 <script lang="ts">
