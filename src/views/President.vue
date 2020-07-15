@@ -97,11 +97,9 @@
         <tr v-for="(row, i) in pollData" :key="i">
           <td>
             {{
-              row.countyName
-                ? row.countyName +
-                  (row.districtName || "") +
-                  (row.villageName || "")
-                : "全國"
+              (row.countyName || "") +
+                (row.districtName || "") +
+                (row.villageName || "") || "全國"
             }}
           </td>
           <td>{{ row.vote }}</td>
@@ -131,7 +129,7 @@ class Form {
   target: AnalNo = "elect";
 }
 
-interface PollData {
+interface Row {
   vote: number;
   villageName?: string;
   districtName?: string;
@@ -149,7 +147,7 @@ export default class extends Vue {
     villages: Array<NameIdPair>(),
     candidates: Array<CandidateResponse>()
   };
-  private pollData = Array<PollData>();
+  private pollData = Array<Row>();
 
   mounted() {
     this.onYearChanged();
