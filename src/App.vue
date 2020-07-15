@@ -8,7 +8,7 @@
       <router-link :to="{ name: 'local' }">縣市長</router-link> |
       <router-link :to="{ name: 'referendum' }">公投案</router-link> |
       <router-link :to="{ name: 'recall' }">韓國瑜罷免案</router-link> |
-      <router-link :to="{ name: 'advanced' }">進階查詢</router-link>
+      <router-link :to="{ name: 'custom' }">查詢修改</router-link>
     </div>
     <div class="container">
       <router-view />

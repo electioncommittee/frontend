@@ -39,6 +39,11 @@ const routes: Array<RouteConfig> = [
     path: "/recall",
     name: "recall",
     component: () => import("./views/Recall.vue")
+  },
+  {
+    path: "/custom",
+    name: "custom",
+    component: () => import("./views/Custom.vue")
   }
 ];
 
