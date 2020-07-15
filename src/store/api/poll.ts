@@ -82,5 +82,31 @@ interface LegislatorResponse {
 
 export async function queryLegislator(o: LegislatorRequest) {
   const ret = await ajax.get("/api/get-polls", { params: o });
-  return ret.data as LocalResponse[];
+  return ret.data as LegislatorResponse[];
+}
+
+interface LegislatorAtLargeRequest {
+  year: number;
+  no: number | "winner";
+  area: number;
+  granule: "county" | "country" | "district" | "village";
+  type: "legislator_at_large";
+}
+
+interface LegislatorAtLargeResponse {
+  no: number;
+  countyId?: number;
+  countyName?: string;
+  districtId?: number;
+  districtName?: string;
+  villageId?: number;
+  villageName?: string;
+  partyId: number;
+  partyName: string;
+  vote: number;
+}
+
+export async function queryLegislatorAtLarge(o: LegislatorAtLargeRequest) {
+  const ret = await ajax.get("/api/get-polls", { params: o });
+  return ret.data as LegislatorAtLargeResponse[];
 }
