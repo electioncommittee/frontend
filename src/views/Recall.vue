@@ -1,7 +1,8 @@
 <template>
   <div>
+    <p class="text-center mb-5"><img src="/korea.jpg" height="400" /></p>
     <form @submit.prevent="queryPoll">
-      <div class="form-group">
+      <div class="form-group" v-show="false">
         <label>案次</label>
         <select required class="form-control" disabled>
           <option value="888" selected>韓國瑜罷免案</option>
