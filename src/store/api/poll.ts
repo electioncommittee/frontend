@@ -135,3 +135,27 @@ export async function queryRecall(o: RecallRequest) {
   const ret = await ajax.get("/api/get-polls", { params: o });
   return ret.data as RecallResponse[];
 }
+
+interface ReferendumRequest {
+  case: number;
+  area: number;
+  granule: "county" | "country" | "district" | "village";
+  type: "referendum";
+  no: "winner" | "consent" | "against" | "void" | "voter";
+}
+
+interface ReferendumResponse {
+  no: "consent" | "against" | "voter" | "void";
+  countyId?: number;
+  countyName?: string;
+  districtId?: number;
+  districtName?: string;
+  villageId?: number;
+  villageName?: string;
+  vote: number;
+}
+
+export async function queryReferendum(o: ReferendumRequest) {
+  const ret = await ajax.get("/api/get-polls", { params: o });
+  return ret.data as ReferendumResponse[];
+}

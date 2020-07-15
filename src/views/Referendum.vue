@@ -73,21 +73,54 @@
       </div>
       <input type="submit" class="btn btn-primary" />
     </form>
+    <table class="table table-hover mt-5">
+      <thead>
+        <tr>
+          <th>地區</th>
+          <th>票數</th>
+          <th>陣營</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(row, i) in pollData" :key="i">
+          <td>
+            {{
+              (row.countyName || "") +
+                (row.districtName || "") +
+                (row.villageName || "") || "全國"
+            }}
+          </td>
+          <td>{{ row.vote }}</td>
+          <td>{{ row.no === "consent" ? "正方" : "反方" }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 import * as AreaApi from "@/store/api/area";
+import * as PollApi from "@/store/api/poll";
 import { CandidateResponse } from "@/store/api/candidate";
-import { NameIdPair, Granule, AnalTarget } from "@/store/utils";
+import { NameIdPair } from "@/store/utils";
 import Area from "@/store/area.ts";
+type Granule = "county" | "country" | "district" | "village";
+type AnalNo = "winner" | "consent" | "against" | "void" | "voter";
 
 class Form {
   case = 7;
   area = new Area();
   granule: Granule = "country";
-  target: AnalTarget = "winner";
+  target: AnalNo = "winner";
+}
+
+interface Row {
+  vote: number;
+  villageName?: string;
+  districtName?: string;
+  countyName?: string;
+  no: "consent" | "against" | "void" | "voter";
 }
 
 @Component
@@ -99,6 +132,7 @@ export default class extends Vue {
     villages: Array<NameIdPair>(),
     candidates: Array<CandidateResponse>()
   };
+  private pollData = Array<Row>();
 
   mounted() {
     this.updateCounties();
@@ -166,6 +200,14 @@ export default class extends Vue {
       alert("查詢範圍與顆粒大小矛盾");
       return;
     }
+
+    this.pollData = await PollApi.queryReferendum({
+      type: "referendum",
+      area: this.form.area.id,
+      granule: this.form.granule,
+      no: this.form.target,
+      case: this.form.case
+    });
   }
 }
 </script>
