@@ -14,8 +14,8 @@
       </div>
       <input type="submit" class="btn btn-primary" />
     </form>
-    <div class="card mt-5" v-if="mode">
-      <div class="card-body">
+    <div class="card mt-5">
+      <div class="card-body" v-if="mode">
         <h2 class="card-title">查詢結果</h2>
         <table
           class="table table-bordered table-hover"
@@ -27,6 +27,17 @@
             </tr>
           </tbody>
         </table>
+      </div>
+      <div class="card-body" v-else>
+        <h2 class="card-title">說明</h2>
+        <p>這裡可以讓你改別人的名字歐，可以改候選人還有政黨名稱。</p>
+        <p>
+          請你先搜尋你要改的人名或檔名，結果列出來之後按一下表格的 cell
+          就可以了。<br />改完的結果會反應到之後的查詢結果上，所以資料庫是有更新的欸。
+        </p>
+        <p>
+          如果你搜不到目標的話，可能那個名字被改成什麼怪怪的東西了。<br />你可以去選舉查詢區域查一下它現在到底叫什麼名字。
+        </p>
       </div>
     </div>
   </div>
